@@ -1,7 +1,13 @@
 import React from 'react';
 import { View} from 'react-native';
 
-const Obstacles = ({ obstaclesLeft, obstaclesWidth, obstaclesHeight, gap }) => {
+const Obstacles = ({ 
+        obstaclesLeft, 
+        obstaclesWidth, 
+        obstaclesHeight, 
+        gap, 
+        randomBottom 
+    }) => {
     return (
         <>
             <View style={{
@@ -9,7 +15,7 @@ const Obstacles = ({ obstaclesLeft, obstaclesWidth, obstaclesHeight, gap }) => {
                 backgroundColor: 'green',
                 width: obstaclesWidth,
                 height: obstaclesHeight,
-                bottom: 0 + obstaclesHeight + gap,
+                bottom: randomBottom + obstaclesHeight + gap,
                 left: obstaclesLeft,
             }}/>
             <View style={{
@@ -17,7 +23,7 @@ const Obstacles = ({ obstaclesLeft, obstaclesWidth, obstaclesHeight, gap }) => {
                 backgroundColor: 'green',
                 width: obstaclesWidth,
                 height: obstaclesHeight,
-                bottom: 0,
+                bottom: randomBottom,
                 left: obstaclesLeft,
             }}/>
         </>
