@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, Dimensions, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, View, Text, Dimensions, TouchableWithoutFeedback, Image, ImageBackground } from 'react-native';
+import { Audio } from 'expo-av';
 import Obstacles from './components/Obstacles';
 import Bird from './components/Bird';
+import background from './assets/sprites/background-day.png'
 
 const App = () => {
 
@@ -15,6 +17,8 @@ const App = () => {
   const [ obstaclesNegHeightTwo, setObstaclesNegHeightTwo ] = useState(0)
   const [ isGameOver, setIsGameOver ] = useState(false)
   const [ score, setScore ] = useState(0)
+  const [ firstPoint, setFirstPoint ] = useState(null);
+  const [ secondPoint, setSecondPoint ] = useState(null);
 
   const birdLeft = screenWidth / 2;
   const obstaclesWidth = 60;
@@ -25,6 +29,7 @@ const App = () => {
   let gameTimerId;
   let obstaclesLeftTimerId;
   let obstaclesLeftTimerIdTwo;
+
 
   //Bird is falling
   useEffect(() => {
@@ -47,6 +52,11 @@ const App = () => {
 
   //obstacle 1
   useEffect(() => {
+    if((obstaclesLeft + (obstaclesWidth / 2) < screenWidth / 2) && !firstPoint){
+      setScore(score => score + 1);
+      setFirstPoint(true);
+    }
+    
     if(obstaclesLeft > -obstaclesWidth){
       obstaclesLeftTimerId = setInterval(() => {
         setObstaclesLeft(obstaclesLeft => obstaclesLeft - 5);
@@ -58,12 +68,17 @@ const App = () => {
     } else {
       setObstaclesLeft(screenWidth);
       setObstaclesNegHeight( - Math.random() * 100 );
-      setScore(score => score + 1)
+      setFirstPoint(null);
     };
   }, [obstaclesLeft]);
   
   //obstacle 2
   useEffect(() => {
+    if((obstaclesLeftTwo + (obstaclesWidth / 2) < screenWidth / 2) && !secondPoint){
+      setScore(score => score + 1);
+      setSecondPoint(true);
+    }
+    
     if(obstaclesLeftTwo > -obstaclesWidth){
       obstaclesLeftTimerIdTwo = setInterval(() => {
         setObstaclesLeftTwo(obstaclesLeftTwo => obstaclesLeftTwo - 5);
@@ -71,11 +86,11 @@ const App = () => {
 
       return () => {
         clearInterval(obstaclesLeftTimerIdTwo);
-      } 
-    }else {
+      }
+    } else {
       setObstaclesLeftTwo(screenWidth);
       setObstaclesNegHeightTwo( - Math.random() * 100 );
-      setScore(score => score + 1)
+      setSecondPoint(null);
     };
   }, [obstaclesLeft]);
 
@@ -117,7 +132,7 @@ const App = () => {
 
   return (
     <TouchableWithoutFeedback onPress={() => jump()}>
-      <View style={styles.container}>
+      <ImageBackground style={styles.container} source={background} resizeMode={'contain'}>
         <Text>Score:{score}</Text>
         <Bird
           birdBottom={birdBottom}
@@ -137,7 +152,7 @@ const App = () => {
           randomBottom={obstaclesNegHeightTwo}
           gap={gap}
         />
-      </View>
+      </ImageBackground>
     </TouchableWithoutFeedback>
   );
 };
